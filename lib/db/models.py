@@ -1,5 +1,6 @@
-from sqlalchemy import Float, create_engine, Column, Integer, String, Date
+from sqlalchemy import Float, ForeignKey, Time, create_engine, Column, Integer, String, Date
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 
 engine = create_engine('sqlite:///f1.db', echo=True)
@@ -42,6 +43,8 @@ class Circuit(Base):
     alt = Column(Integer, nullable=False)
     url = Column(String(255), nullable=True)
 
+    races = relationship("Race", back_populates="circuit")
+
 
 class Constructor(Base):
     __tablename__ = 'constructors'
@@ -58,6 +61,21 @@ class Status(Base):
 
     statusId = Column(Integer, primary_key=True)
     status = Column(String(255), nullable=False)
+
+
+class Race(Base):
+    __tablename__ = 'races'
+    raceId = Column(Integer, primary_key=True)
+    year = Column(Integer, nullable=False)
+    round = Column(Integer, nullable=False)
+    circuitId = Column(Integer, ForeignKey(
+        'circuits.circuitId'), nullable=False)
+    name = Column(String(255), nullable=False)
+    date = Column(Date, nullable=False)
+    time = Column(Time, nullable=True)
+    url = Column(String(255), nullable=True)
+
+    circuit = relationship("Circuit", back_populates="races")
 
 
 Base.metadata.create_all(engine)
