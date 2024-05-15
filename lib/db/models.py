@@ -43,4 +43,14 @@ class Circuit(Base):
     url = Column(String(255), nullable=True)
 
 
+class Constructor(Base):
+    __tablename__ = 'constructors'
+
+    constructorId = Column(Integer, primary_key=True)
+    constructorRef = Column(String(255), nullable=False)
+    name = Column(String(255), nullable=False)
+    nationality = Column(String(255), nullable=False)
+    url = Column(String(255), nullable=True)
+
+
 Base.metadata.create_all(engine)
