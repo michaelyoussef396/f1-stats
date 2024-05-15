@@ -1,7 +1,7 @@
 import os
 import csv
 from sqlalchemy.orm import sessionmaker
-from models import Season, engine
+from models import Circuit, engine
 
 
 Session = sessionmaker(bind=engine)
@@ -19,7 +19,15 @@ def seed_tables(table_name, model):
 
         data = []
         for row in csv_data:
-            row['year'] = int(row['year'])
+            circuitId = int(row['circuitId']),
+            circuitRef = row['circuitRef'],
+            name = row['name'],
+            location = row['location'],
+            country = row['country'],
+            lat = float(row['lat']),
+            lng = float(row['lng']),
+            alt = int(row['alt']),
+            url = row['url']
             instance = model(**row)
             data.append(instance)
 
@@ -29,7 +37,7 @@ def seed_tables(table_name, model):
         session.close()
 
 
-table_name = "seasons.csv"
-model = Season
+table_name = "circuits.csv"
+model = Circuit
 
 seed_tables(table_name, model)
