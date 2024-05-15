@@ -22,4 +22,11 @@ class Driver(Base):
     url = Column(String)
 
 
+class Season(Base):
+    __tablename__ = 'seasons'
+
+    year = Column(Integer, primary_key=True)
+    url = Column(String)
+
+
 Base.metadata.create_all(engine)
