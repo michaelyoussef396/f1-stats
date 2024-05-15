@@ -53,4 +53,11 @@ class Constructor(Base):
     url = Column(String(255), nullable=True)
 
 
+class Status(Base):
+    __tablename__ = 'status'
+
+    statusId = Column(Integer, primary_key=True)
+    status = Column(String(255), nullable=False)
+
+
 Base.metadata.create_all(engine)
