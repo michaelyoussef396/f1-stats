@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Date
+from sqlalchemy import Float, create_engine, Column, Integer, String, Date
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -27,6 +27,20 @@ class Season(Base):
 
     year = Column(Integer, primary_key=True)
     url = Column(String)
+
+
+class Circuit(Base):
+    __tablename__ = 'circuits'
+
+    circuitId = Column(Integer, primary_key=True)
+    circuitRef = Column(String(255), nullable=False)
+    name = Column(String(255), nullable=False)
+    location = Column(String(255), nullable=False)
+    country = Column(String(255), nullable=False)
+    lat = Column(Float, nullable=False)
+    lng = Column(Float, nullable=False)
+    alt = Column(Integer, nullable=False)
+    url = Column(String(255), nullable=True)
 
 
 Base.metadata.create_all(engine)
