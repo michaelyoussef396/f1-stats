@@ -43,7 +43,7 @@ class Circuit(Base):
     alt = Column(Integer, nullable=False)
     url = Column(String(255), nullable=True)
 
-    races = relationship("Race", back_populates="circuit")
+    # races = relationship("Race", back_populates="circuit")
 
 
 class Constructor(Base):
@@ -68,14 +68,13 @@ class Race(Base):
     raceId = Column(Integer, primary_key=True)
     year = Column(Integer, nullable=False)
     round = Column(Integer, nullable=False)
-    circuitId = Column(Integer, ForeignKey(
-        'circuits.circuitId'), nullable=False)
+    circuitId = Column(Integer, nullable=False)
     name = Column(String(255), nullable=False)
     date = Column(Date, nullable=False)
     time = Column(Time, nullable=True)
     url = Column(String(255), nullable=True)
 
-    circuit = relationship("Circuit", back_populates="races")
+    # circuit = relationship("Circuit", back_populates="races")
 
 
 Base.metadata.create_all(engine)
