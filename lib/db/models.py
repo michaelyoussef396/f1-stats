@@ -70,7 +70,8 @@ class Race(Base):
     raceId = Column(Integer, primary_key=True)
     year = Column(Integer, nullable=False)
     round = Column(Integer, nullable=False)
-    circuitId = Column(Integer, nullable=False)
+    circuitId = Column(Integer, ForeignKey(
+        'circuits.circuitId'), nullable=False)
     name = Column(String(255), nullable=False)
     date = Column(Date, nullable=False)
     time = Column(Time, nullable=True)
