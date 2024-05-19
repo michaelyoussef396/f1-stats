@@ -111,9 +111,6 @@ class Qualify(Base):
         'constructors.constructorId'), nullable=True)
     number = Column(Integer, nullable=True)
     position = Column(Integer, nullable=True)
-    q1 = Column(Time, nullable=True)
-    q2 = Column(Time, nullable=True)
-    q3 = Column(Time, nullable=True)
 
     race = relationship("Race")
     driver = relationship("Driver")

@@ -2,12 +2,12 @@ import os
 import csv
 from datetime import datetime
 from sqlalchemy.orm import sessionmaker
-from models import Race, engine, Status, Season, Driver, Constructor, Circuit, LapTime
+from models import Race, engine, Status, Season, Driver, Constructor, Circuit, LapTime, Qualify
 
 Session = sessionmaker(bind=engine)
 
-table = "races.csv"
-model = Race
+table = "qualifying.csv"
+model = Qualify
 
 
 def get_csv(csv_name):
@@ -183,4 +183,27 @@ def seed_lapTime(table, model):
     session.close()
 
 
-seed_races(table, model)
+def seed_qualify(table, model):
+    csv_file_path = get_csv(table)
+    with open(csv_file_path, 'r') as file:
+        csv_data = csv.DictReader(file)
+        data = []
+        for row in csv_data:
+            qualifyId = int(row['qualifyId'])
+            raceId = int(row['raceId']) if row['raceId'] else None
+            driverId = int(row['driverId']) if row['driverId'] else None
+            constructorId = int(row['constructorId']
+                                ) if row['constructorId'] else None
+            number = int(row['number']) if row['number'] else None
+            position = int(row['position']) if row['position'] else None
+
+            instance = model(**row)
+            data.append(instance)
+
+    session = Session()
+    session.add_all(data)
+    session.commit()
+    session.close()
+
+
+seed_qualify(table, model)
