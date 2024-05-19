@@ -23,6 +23,7 @@ class Driver(Base):
     url = Column(String)
 
     laptimes = relationship("LapTime", back_populates="driver")
+    qualify = relationship("Qualify", back_populates="race")
 
 
 class Season(Base):
@@ -57,6 +58,8 @@ class Constructor(Base):
     nationality = Column(String(255), nullable=False)
     url = Column(String(255), nullable=True)
 
+    qualify = relationship("Qualify", back_populates="race")
+
 
 class Status(Base):
     __tablename__ = 'status'
@@ -79,6 +82,7 @@ class Race(Base):
 
     circuit = relationship("Circuit", back_populates="races")
     laptimes = relationship("LapTime", back_populates="race")
+    qualify = relationship("Qualify", back_populates="race")
 
 
 class LapTime(Base):
@@ -94,6 +98,25 @@ class LapTime(Base):
 
     race = relationship("Race", back_populates="laptimes")
     driver = relationship("Driver", back_populates="laptimes")
+
+
+class Qualify(Base):
+    __tablename__ = 'qualify'
+
+    qualifyId = Column(Integer, primary_key=True)
+    raceId = Column(Integer, ForeignKey('races.raceId'), nullable=True)
+    driverId = Column(Integer, ForeignKey('drivers.driverId'), nullable=True)
+    constructorId = Column(Integer, ForeignKey(
+        'constructors.constructorId'), nullable=True)
+    number = Column(Integer, nullable=True)
+    position = Column(Integer, nullable=True)
+    q1 = Column(Time, nullable=True)
+    q2 = Column(Time, nullable=True)
+    q3 = Column(Time, nullable=True)
+
+    race = relationship("Race", back_populates="qualify")
+    driver = relationship("Driver", back_populates="qualify")
+    constructor = relationship("Constructor", back_populates="qualify")
 
 
 Base.metadata.create_all(engine)
