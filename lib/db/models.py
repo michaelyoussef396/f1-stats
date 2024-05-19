@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy import Float, ForeignKey, Time, create_engine, Column, Integer, String, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -22,8 +23,8 @@ class Driver(Base):
     nationality = Column(String)
     url = Column(String)
 
+    qualify = relationship("Qualify")
     laptimes = relationship("LapTime", back_populates="driver")
-    qualify = relationship("Qualify", back_populates="race")
 
 
 class Season(Base):
@@ -58,7 +59,7 @@ class Constructor(Base):
     nationality = Column(String(255), nullable=False)
     url = Column(String(255), nullable=True)
 
-    qualify = relationship("Qualify", back_populates="race")
+    qualify = relationship("Qualify", back_populates="constructor")
 
 
 class Status(Base):
@@ -82,7 +83,7 @@ class Race(Base):
 
     circuit = relationship("Circuit", back_populates="races")
     laptimes = relationship("LapTime", back_populates="race")
-    qualify = relationship("Qualify", back_populates="race")
+    qualify = relationship("Qualify")
 
 
 class LapTime(Base):
@@ -114,8 +115,8 @@ class Qualify(Base):
     q2 = Column(Time, nullable=True)
     q3 = Column(Time, nullable=True)
 
-    race = relationship("Race", back_populates="qualify")
-    driver = relationship("Driver", back_populates="qualify")
+    race = relationship("Race")
+    driver = relationship("Driver")
     constructor = relationship("Constructor", back_populates="qualify")
 
 

@@ -6,8 +6,8 @@ from models import Race, engine, Status, Season, Driver, Constructor, Circuit, L
 
 Session = sessionmaker(bind=engine)
 
-table = "lap_times.csv"
-model = LapTime
+table = "races.csv"
+model = Race
 
 
 def get_csv(csv_name):
@@ -183,4 +183,4 @@ def seed_lapTime(table, model):
     session.close()
 
 
-seed_lapTime(table, model)
+seed_races(table, model)
