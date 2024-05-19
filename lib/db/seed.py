@@ -204,6 +204,3 @@ def seed_qualify(table, model):
     session.add_all(data)
     session.commit()
     session.close()
-
-
-seed_qualify(table, model)

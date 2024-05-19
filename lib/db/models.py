@@ -117,4 +117,20 @@ class Qualify(Base):
     constructor = relationship("Constructor", back_populates="qualify")
 
 
+class PitStop(Base):
+    __tablename__ = 'pit_stops'
+
+    raceId = Column(Integer, ForeignKey('races.raceId'), primary_key=True)
+    driverId = Column(Integer, ForeignKey(
+        'drivers.driverId'), primary_key=True)
+    stop = Column(Integer, primary_key=True)
+    lap = Column(Integer)
+    time = Column(Time)
+    duration = Column(String(20))
+    milliseconds = Column(Integer)
+
+    race = relationship("Race", back_populates="pit_stops")
+    driver = relationship("Driver", back_populates="pit_stops")
+
+
 Base.metadata.create_all(engine)
