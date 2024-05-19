@@ -22,6 +22,8 @@ class Driver(Base):
     nationality = Column(String)
     url = Column(String)
 
+    laptimes = relationship("LapTime", back_populates="driver")
+
 
 class Season(Base):
     __tablename__ = 'seasons'
@@ -43,7 +45,7 @@ class Circuit(Base):
     alt = Column(Integer, nullable=False)
     url = Column(String(255), nullable=True)
 
-    # races = relationship("Race", back_populates="circuit")
+    races = relationship("Race", back_populates="circuit")
 
 
 class Constructor(Base):
@@ -74,7 +76,23 @@ class Race(Base):
     time = Column(Time, nullable=True)
     url = Column(String(255), nullable=True)
 
-    # circuit = relationship("Circuit", back_populates="races")
+    circuit = relationship("Circuit", back_populates="races")
+    laptimes = relationship("LapTime", back_populates="race")
+
+
+class LapTime(Base):
+    __tablename__ = 'laptimes'
+
+    raceId = Column(Integer, ForeignKey('races.raceId'), primary_key=True)
+    driverId = Column(Integer, ForeignKey(
+        'drivers.driverId'), primary_key=True)
+    lap = Column(Integer, primary_key=True)
+    position = Column(Integer)
+    time = Column(String(255))
+    milliseconds = Column(Integer)
+
+    race = relationship("Race", back_populates="laptimes")
+    driver = relationship("Driver", back_populates="laptimes")
 
 
 Base.metadata.create_all(engine)
