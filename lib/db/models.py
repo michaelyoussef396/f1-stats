@@ -23,8 +23,9 @@ class Driver(Base):
     nationality = Column(String)
     url = Column(String)
 
-    qualify = relationship("Qualify")
+    qualify = relationship("Qualify", overlaps="qualify")
     laptimes = relationship("LapTime", back_populates="driver")
+    pit_stops = relationship("PitStop", back_populates="driver")
 
 
 class Season(Base):
@@ -84,6 +85,8 @@ class Race(Base):
     circuit = relationship("Circuit", back_populates="races")
     laptimes = relationship("LapTime", back_populates="race")
     qualify = relationship("Qualify")
+    pit_stops = relationship("PitStop", back_populates="race")
+    qualify = relationship("Qualify", overlaps="qualify")
 
 
 class LapTime(Base):
