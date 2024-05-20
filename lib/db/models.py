@@ -27,6 +27,7 @@ class Driver(Base):
     laptimes = relationship("LapTime", back_populates="driver")
     pit_stops = relationship("PitStop", back_populates="driver")
     driver_standings = relationship("DriverStanding", back_populates="driver")
+    sprint_results = relationship("SprintResult", back_populates="driver")
 
 
 class Season(Base):
@@ -67,6 +68,8 @@ class Constructor(Base):
     constructor_results = relationship(
         "ConstructorResult", back_populates="constructor")
 
+    sprint_results = relationship("SprintResult", back_populates="constructor")
+
 
 class Status(Base):
     __tablename__ = 'status'
@@ -97,6 +100,7 @@ class Race(Base):
         "ConstructorStanding", back_populates="race")
     constructor_results = relationship(
         "ConstructorResult", back_populates="race")
+    sprint_results = relationship("SprintResult", back_populates="race")
 
 
 class LapTime(Base):
@@ -191,6 +195,33 @@ class ConstructorResult(Base):
     race = relationship("Race", back_populates="constructor_results")
     constructor = relationship(
         "Constructor", back_populates="constructor_results")
+
+
+class SprintResult(Base):
+    __tablename__ = 'sprint_results'
+
+    resultId = Column(Integer, primary_key=True)
+    raceId = Column(Integer, ForeignKey('races.raceId'), nullable=False)
+    driverId = Column(Integer, ForeignKey('drivers.driverId'), nullable=False)
+    constructorId = Column(Integer, ForeignKey(
+        'constructors.constructorId'), nullable=False)
+    number = Column(Integer)
+    grid = Column(Integer)
+    position = Column(Integer)
+    positionText = Column(String(255))
+    positionOrder = Column(Integer)
+    points = Column(Float)
+    laps = Column(Integer)
+    time = Column(String(255))
+    milliseconds = Column(Integer)
+    fastestLap = Column(Integer)
+    fastestLapTime = Column(String(255))
+    statusId = Column(Integer, ForeignKey('status.statusId'))
+
+    race = relationship("Race", back_populates="sprint_results")
+    driver = relationship("Driver", back_populates="sprint_results")
+    constructor = relationship("Constructor", back_populates="sprint_results")
+    status = relationship("Status")
 
 
 Base.metadata.create_all(engine)

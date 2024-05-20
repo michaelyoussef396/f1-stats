@@ -2,12 +2,12 @@ import os
 import csv
 from datetime import datetime
 from sqlalchemy.orm import sessionmaker
-from models import Race, engine, Status, Season, Driver, Constructor, Circuit, LapTime, Qualify, PitStop, DriverStanding, ConstructorStanding
+from models import Race, engine, Status, Season, Driver, Constructor, Circuit, LapTime, Qualify, PitStop, DriverStanding, ConstructorStanding, ConstructorResult
 
 Session = sessionmaker(bind=engine)
 
-table = "constructor_standings.csv"
-model = ConstructorStanding
+table = "constructor_results.csv"
+model = ConstructorResult
 
 
 def get_csv(csv_name):
@@ -300,4 +300,31 @@ def seed_constructor_standings(table, model):
     session.close()
 
 
-seed_constructor_standings(table, model)
+def seed_constructor_results(table, model):
+    csv_file_path = get_csv(table)
+    with open(csv_file_path, 'r') as file:
+        csv_data = csv.DictReader(file)
+        data = []
+        for row in csv_data:
+            constructorResultsId = int(row['constructorResultsId'])
+            raceId = int(row['raceId'])
+            constructorId = int(row['constructorId'])
+            points = float(row['points'])
+            status = row['status'] if row['status'] != '\\N' else None
+
+            instance = model(
+                constructorResultsId=constructorResultsId,
+                raceId=raceId,
+                constructorId=constructorId,
+                points=points,
+                status=status
+            )
+            data.append(instance)
+
+    session = Session()
+    session.add_all(data)
+    session.commit()
+    session.close()
+
+
+seed_constructor_results(table, model)
