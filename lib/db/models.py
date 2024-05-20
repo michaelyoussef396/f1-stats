@@ -64,6 +64,8 @@ class Constructor(Base):
     qualify = relationship("Qualify", back_populates="constructor")
     constructor_standings = relationship(
         "ConstructorStanding", back_populates="constructor")
+    constructor_results = relationship(
+        "ConstructorResult", back_populates="constructor")
 
 
 class Status(Base):
@@ -93,6 +95,8 @@ class Race(Base):
     driver_standings = relationship("DriverStanding", back_populates="race")
     constructor_standings = relationship(
         "ConstructorStanding", back_populates="race")
+    constructor_results = relationship(
+        "ConstructorResult", back_populates="race")
 
 
 class LapTime(Base):
@@ -172,6 +176,21 @@ class ConstructorStanding(Base):
     race = relationship("Race", back_populates="constructor_standings")
     constructor = relationship(
         "Constructor", back_populates="constructor_standings")
+
+
+class ConstructorResult(Base):
+    __tablename__ = 'constructor_results'
+
+    constructorResultsId = Column(Integer, primary_key=True)
+    raceId = Column(Integer, ForeignKey('races.raceId'), nullable=False)
+    constructorId = Column(Integer, ForeignKey(
+        'constructors.constructorId'), nullable=False)
+    points = Column(Float, nullable=False)
+    status = Column(String(255))
+
+    race = relationship("Race", back_populates="constructor_results")
+    constructor = relationship(
+        "Constructor", back_populates="constructor_results")
 
 
 Base.metadata.create_all(engine)
