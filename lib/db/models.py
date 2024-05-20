@@ -28,6 +28,7 @@ class Driver(Base):
     pit_stops = relationship("PitStop", back_populates="driver")
     driver_standings = relationship("DriverStanding", back_populates="driver")
     sprint_results = relationship("SprintResult", back_populates="driver")
+    results = relationship("Result", back_populates="driver")
 
 
 class Season(Base):
@@ -67,8 +68,8 @@ class Constructor(Base):
         "ConstructorStanding", back_populates="constructor")
     constructor_results = relationship(
         "ConstructorResult", back_populates="constructor")
-
     sprint_results = relationship("SprintResult", back_populates="constructor")
+    results = relationship("Result", back_populates="constructor")
 
 
 class Status(Base):
@@ -101,6 +102,7 @@ class Race(Base):
     constructor_results = relationship(
         "ConstructorResult", back_populates="race")
     sprint_results = relationship("SprintResult", back_populates="race")
+    results = relationship("Result", back_populates="race")
 
 
 class LapTime(Base):
@@ -221,6 +223,35 @@ class SprintResult(Base):
     race = relationship("Race", back_populates="sprint_results")
     driver = relationship("Driver", back_populates="sprint_results")
     constructor = relationship("Constructor", back_populates="sprint_results")
+    status = relationship("Status")
+
+
+class Result(Base):
+    __tablename__ = 'results'
+
+    resultId = Column(Integer, primary_key=True)
+    raceId = Column(Integer, ForeignKey('races.raceId'), nullable=False)
+    driverId = Column(Integer, ForeignKey('drivers.driverId'), nullable=False)
+    constructorId = Column(Integer, ForeignKey(
+        'constructors.constructorId'), nullable=False)
+    number = Column(Integer)
+    grid = Column(Integer)
+    position = Column(Integer)
+    positionText = Column(String(255))
+    positionOrder = Column(Integer)
+    points = Column(Float)
+    laps = Column(Integer)
+    time = Column(String(255))
+    milliseconds = Column(Integer)
+    fastestLap = Column(Integer)
+    rank = Column(Integer)
+    fastestLapTime = Column(String(255))
+    fastestLapSpeed = Column(String(255))
+    statusId = Column(Integer, ForeignKey('status.statusId'))
+
+    race = relationship("Race", back_populates="results")
+    driver = relationship("Driver", back_populates="results")
+    constructor = relationship("Constructor", back_populates="results")
     status = relationship("Status")
 
 
