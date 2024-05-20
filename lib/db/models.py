@@ -29,7 +29,6 @@ class Driver(Base):
     driver_standings = relationship("DriverStanding", back_populates="driver")
 
 
-
 class Season(Base):
     __tablename__ = 'seasons'
 
@@ -63,6 +62,8 @@ class Constructor(Base):
     url = Column(String(255), nullable=True)
 
     qualify = relationship("Qualify", back_populates="constructor")
+    constructor_standings = relationship(
+        "ConstructorStanding", back_populates="constructor")
 
 
 class Status(Base):
@@ -90,6 +91,8 @@ class Race(Base):
     pit_stops = relationship("PitStop", back_populates="race")
     qualify = relationship("Qualify", overlaps="qualify")
     driver_standings = relationship("DriverStanding", back_populates="race")
+    constructor_standings = relationship(
+        "ConstructorStanding", back_populates="race")
 
 
 class LapTime(Base):
@@ -152,6 +155,23 @@ class DriverStanding(Base):
 
     race = relationship("Race", back_populates="driver_standings")
     driver = relationship("Driver", back_populates="driver_standings")
+
+
+class ConstructorStanding(Base):
+    __tablename__ = 'constructor_standings'
+
+    constructorStandingsId = Column(Integer, primary_key=True)
+    raceId = Column(Integer, ForeignKey('races.raceId'), nullable=False)
+    constructorId = Column(Integer, ForeignKey(
+        'constructors.constructorId'), nullable=False)
+    points = Column(Float, nullable=False)
+    position = Column(Integer, nullable=False)
+    positionText = Column(String(255), nullable=False)
+    wins = Column(Integer, nullable=False)
+
+    race = relationship("Race", back_populates="constructor_standings")
+    constructor = relationship(
+        "Constructor", back_populates="constructor_standings")
 
 
 Base.metadata.create_all(engine)
