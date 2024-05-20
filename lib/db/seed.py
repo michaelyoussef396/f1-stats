@@ -2,12 +2,12 @@ import os
 import csv
 from datetime import datetime
 from sqlalchemy.orm import sessionmaker
-from models import Race, engine, Status, Season, Driver, Constructor, Circuit, LapTime, Qualify, PitStop, DriverStanding, ConstructorStanding, ConstructorResult
+from models import Race, engine, Status, Season, Driver, Constructor, Circuit, LapTime, Qualify, PitStop, DriverStanding, ConstructorStanding, ConstructorResult, SprintResult
 
 Session = sessionmaker(bind=engine)
 
-table = "constructor_results.csv"
-model = ConstructorResult
+table = "sprint_results.csv"
+model = SprintResult
 
 
 def get_csv(csv_name):
@@ -327,4 +327,58 @@ def seed_constructor_results(table, model):
     session.close()
 
 
-seed_constructor_results(table, model)
+def seed_sprint_results(table, model):
+    csv_file_path = get_csv(table)
+    with open(csv_file_path, 'r') as file:
+        csv_data = csv.DictReader(file)
+        data = []
+        for row in csv_data:
+            resultId = int(row['resultId'])
+            raceId = int(row['raceId'])
+            driverId = int(row['driverId'])
+            constructorId = int(row['constructorId'])
+            number = int(row['number']) if row['number'] != '\\N' else None
+            grid = int(row['grid']) if row['grid'] != '\\N' else None
+            position = int(
+                row['position']) if row['position'] != '\\N' else None
+            positionText = row['positionText'] if row['positionText'] != '\\N' else None
+            positionOrder = int(
+                row['positionOrder']) if row['positionOrder'] != '\\N' else None
+            points = float(row['points']) if row['points'] != '\\N' else None
+            laps = int(row['laps']) if row['laps'] != '\\N' else None
+            time = row['time'] if row['time'] != '\\N' else None
+            milliseconds = int(row['milliseconds']
+                               ) if row['milliseconds'] != '\\N' else None
+            fastestLap = int(row['fastestLap']
+                             ) if row['fastestLap'] != '\\N' else None
+            fastestLapTime = row['fastestLapTime'] if row['fastestLapTime'] != '\\N' else None
+            statusId = int(
+                row['statusId']) if row['statusId'] != '\\N' else None
+
+            instance = model(
+                resultId=resultId,
+                raceId=raceId,
+                driverId=driverId,
+                constructorId=constructorId,
+                number=number,
+                grid=grid,
+                position=position,
+                positionText=positionText,
+                positionOrder=positionOrder,
+                points=points,
+                laps=laps,
+                time=time,
+                milliseconds=milliseconds,
+                fastestLap=fastestLap,
+                fastestLapTime=fastestLapTime,
+                statusId=statusId
+            )
+            data.append(instance)
+
+    session = Session()
+    session.add_all(data)
+    session.commit()
+    session.close()
+
+
+seed_sprint_results(table, model)
