@@ -2,12 +2,12 @@ import os
 import csv
 from datetime import datetime
 from sqlalchemy.orm import sessionmaker
-from models import Race, engine, Status, Season, Driver, Constructor, Circuit, LapTime, Qualify, PitStop
+from models import Race, engine, Status, Season, Driver, Constructor, Circuit, LapTime, Qualify, PitStop, DriverStanding
 
 Session = sessionmaker(bind=engine)
 
-table = "pit_stops.csv"
-model = PitStop
+table = "driver_standings.csv"
+model = DriverStanding
 
 
 def get_csv(csv_name):
@@ -238,4 +238,35 @@ def seed_pit_stop(table, model):
     session.close()
 
 
-seed_pit_stop(table, model)
+def seed_driver_standing(table, model):
+    csv_file_path = get_csv(table)
+    with open(csv_file_path, 'r') as file:
+        csv_data = csv.DictReader(file)
+        data = []
+        for row in csv_data:
+            driverStandingsId = int(row['driverStandingsId'])
+            raceId = int(row['raceId'])
+            driverId = int(row['driverId'])
+            points = float(row['points'])
+            position = int(row['position'])
+            positionText = row['positionText']
+            wins = int(row['wins'])
+
+            instance = model(
+                driverStandingsId=driverStandingsId,
+                raceId=raceId,
+                driverId=driverId,
+                points=points,
+                position=position,
+                positionText=positionText,
+                wins=wins
+            )
+            data.append(instance)
+
+    session = Session()
+    session.add_all(data)
+    session.commit()
+    session.close()
+
+
+seed_driver_standing(table, model)
